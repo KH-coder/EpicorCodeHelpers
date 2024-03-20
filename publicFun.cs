@@ -202,6 +202,39 @@
             return dt;
         }
 
+        /// <summary>
+        /// 新增菜单
+        /// </summary>
+        /// <param name="menuID"></param>
+        /// <param name="parentMenuID"></param>
+        /// <param name="menuCaption"></param>
+        /// <param name="seq"></param>
+        /// <param name="ico"></param>
+        /// <param name="isParentMenu">是否主菜单，主菜单可以包含下级子菜单</param>
+        /// <param name="toolBarName">将菜单加入至toolBarName的工具栏位中;eg:Standard Tools</param>
+        /// <param name="barSeq">菜单在工具栏中的位置</param>
+        public void AddMenu(string menuID, string parentMenuID, string menuCaption, int seq = 0, string ico = "", bool isParentMenu = false, string toolBarName = "", int barSeq = 0) {
+        	if (isParentMenu) {
+            	PopupMenuTool menuTool = new PopupMenuTool(menuID);
+                menuTool.SharedProps.Caption = menuCaption;
+                menuTool.SharedProps.AppearancesSmall.Appearance.Image = EpiUIImages.SmallEnabledImages.Images[EpiUIImages.IndexOf(ico)];
+                menuTool.SharedProps.DisplayStyle = Infragistics.Win.UltraWinToolbars.ToolDisplayStyle.ImageOnlyOnToolbars;
+                this.baseToolbarsManager.Tools.Add(menuTool);
+             } else {
+             	ButtonTool menuBtn = new ButtonTool(menuID);
+                 menuBtn.SharedProps.Caption = menuCaption;
+                 menuBtn.SharedProps.AppearancesSmall.Appearance.Image = EpiUIImages.SmallEnabledImages.Images[EpiUIImages.IndexOf(ico)];
+                 menuBtn.SharedProps.DisplayStyle = Infragistics.Win.UltraWinToolbars.ToolDisplayStyle.ImageAndText;
+    			 //menuBtn.Control.BackColor = System.Drawing.Color.Red;
+                 this.baseToolbarsManager.Tools.Add(menuBtn);
+             }
+             if(parentMenuID != "")   
+             	((PopupMenuTool)baseToolbarsManager.Tools[parentMenuID]).Tools.InsertTool(seq, menuID);
+             if (toolBarName != "")
+                 //((UltraToolbar)BaseToolbarsManager.Toolbars[toolBarName]).Tools.InsertTool(((UltraToolbar)BaseToolbarsManager.Toolbars[toolBarName]).Tools.Count, menuID);//增加到工具栏
+             	((UltraToolbar)baseToolbarsManager.Toolbars[toolBarName]).Tools.InsertTool(barSeq, menuID);//增加到工具栏
+    	}
+
         /// <summary>打开菜单</summary>
         public static UIReflector OpenMenu(object otrans, string menuID, object valueIn = null, bool isModal = false, object contextValue = null)
         {
