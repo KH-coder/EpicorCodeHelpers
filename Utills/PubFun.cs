@@ -1226,5 +1226,23 @@
             x = x + 1;
             return Convert.ToChar(x).ToString();
         }
+        public static object GetQuickSearch(string quickID,bool multiSelect, object oTrans){     
+    		string expstr = string.Empty;
+    		string fname = string.Empty;
+    		int findex = 0;
+    		using (QuickSearchAdapter qds = new QuickSearchAdapter(oTrans)){
+    			qds.BOConnect();
+    			qds.GetByID(string.Empty, quickID);
+    			object obj = new  object();
+    			obj = qds.ShowQuickSearch(oTrans, multiSelect, null, string.Empty);
+    			qds.Dispose();
+    			return obj;
+    		}
+    	}
+
+        public static void ShowMessage(string message){
+            MessageBox.Show(message);
+        }
+        
         #endregion
     }
